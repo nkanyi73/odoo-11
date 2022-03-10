@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <record id="timesheet_search" model="ir.ui.view">
+        <field name="name">om.timesheet.search</field>
+        <field name="model">om.timesheet</field>
+        <field name="arch" type="xml">
+            <search string="Search Timesheets">
+                <field name="engineer_id"/>
+                <field name="final_time"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Engineer" name="engineer" context="{'group_by':'engineer_id'}"/>
+                    <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
+                    <filter string="Day" name="day" context="{'group_by':'stored_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="timesheet_tree" model="ir.ui.view">
+        <field name="name">om.timesheet.tree</field>
+        <field name="model">om.timesheet</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="exceeded == True">
+                <field name="create_date"/>
+                <field name="engineer_id" string="Engineer Name"/>
+                <field name="ticket_no"/>
+                <field name="dept_name"/>
+                <field name="dest_name"/>
+                <field name="category"/>
+                <field name="status"/>
+                <field name="exceeded" string="Delaying"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="timesheet_form" model="ir.ui.view">
+        <field name="name">om.timesheet.form</field>
+        <field name="model">om.timesheet</field>
+        <field name="arch" type="xml">
+            <form string="New Timesheet">
+                <sheet>
+                    <div class="oe_title">
+                        <group>
+                            <field name="name" string="Entry Number" readonly="1"/>
+                        </group>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="ticket_no" string="Related Ticket Number"/>
+                            <field name="engineer_id" string="Engineer Name"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="create_date"/>
+                            <field name="other_employees"/>
+                            <field name="coordinator"/>
+                            <field name="category"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="purpose"/>
+                        <field name="status_comment"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="dept_name" placeholder="From"/>
+                            <field name="exp_dept_time"/>
+                            <field name="arr_time" placeholder="Time engineer arrived"/>
+                            <field name="time_out" placeholder="Time engineer left"/>
+                        </group>
+                        <group>
+                            <field name="dest_name" placeholder="To"/>
+                            <field name="dept_time" placeholder="Time engineer left"/>
+                            <field name="time_in" placeholder="Time engineer started working"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Time Data">
+                            <group>
+                                <group>
+                                    <field name="company_hours"/>
+                                    <field name="delay"/>
+                                    <field name="wait_time"/>
+                                    <field name="no_of_jobs" string="Jobs Today"/>
+                                </group>
+                                <group>
+                                    <field name="exp_completion_time"/>
+                                    <field name="travel_time"/>
+                                    <field name="job_time"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Delays">
+                            <group>
+                                <field name="over_time"/>
+                                <field name="reason"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_timesheet" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">om.timesheet</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_engineer': 1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a new timesheet.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="time_sheet_root"
+              name="Timesheet"
+              sequence="10"/>
+    <menuitem id="timesheet_child_root"
+              name="All Timesheets"
+              parent="time_sheet_root"
+              sequence="10"/>
+    <menuitem id="timesheet_child"
+              name="Engineer Timesheets"
+              parent="timesheet_child_root"
+              action="action_timesheet"
+              sequence="10"/>
+
+
+</odoo>

@@ -40,7 +40,7 @@ class Timesheet(models.Model):
     no_of_jobs = fields.Integer(string='Number of jobs today', compute='_get_no_of_jobs')
     final_time = fields.Char(string='Job date', compute='_transform_created_on')
     delay = fields.Char(string='Delay in departure', compute='_get_delay')
-    coordinator = fields.Char(string='Coordinator')
+    coordinator = fields.Many2one(comodel_name='res.users', string='Coordinator')
     name = fields.Char(string='Entry Number', readonly=True, required=True, copy=False, default=lambda self: _('New'))
     exp_completion_time = fields.Char(string='Expected Completion Time', compute='_get_completion')
     exceeded = fields.Boolean(string='Job', compute='_get_exceeded')
@@ -196,6 +196,11 @@ class Timesheet(models.Model):
             else:
                 d.delay = "00:00:00"
 
+    def action_eng_report(self):
+        template_id = self.env.ref('timesheets.engineer_report_mail').id
+        self.env['mail.template'].browse(template_id).send_mail(self.id, force_send=True)
+
+
     @api.onchange('ticket_no')
     def onchange_ticket_no(self):
         if self.ticket_no:
@@ -203,8 +208,8 @@ class Timesheet(models.Model):
                 self.purpose = self.ticket_no.description
             if self.ticket_no.stage_id:
                 self.status = self.ticket_no.stage_id.name
-            if self.ticket_no.user_id.name:
-                self.coordinator = self.ticket_no.user_id.name
+            if self.ticket_no.user_id:
+                self.coordinator = self.ticket_no.user_id
             if self.ticket_no.status_cmt:
                 self.status_comment = self.ticket_no.status_cmt
             if self.ticket_no.emp_charge:

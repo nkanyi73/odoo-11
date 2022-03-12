@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="engineer_report_mail" model="mail.template">
+            <field name="name">Engineer Timesheet: Send by email</field>
+            <field name="model_id" ref="timesheets.model_om_timesheet"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">${object.coordinator.login |safe}</field>
+            <field name="email_to">${object.engineer_id.work_email |safe}</field>
+            <field name="subject">Timesheet Report</field>
+            <field name="body_html"><![CDATA[
+  <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.engineer_id.name},
+                        <br/>
+                        <br/>
+                        Please find attached your timesheet report.
+                    </p>
+]]></field>
+            <field name="report_template" ref="timesheets.report_engineer_timesheet"/>
+        </record>
+    </data>
+</odoo>

@@ -8,12 +8,14 @@
     """,
     'category': 'Human Resources',
     'website': 'https://www.odoo.com/page/timesheets',
-    'depends': [],
+    'depends':  ['mail','contacts'],
     'data': [
         'security/ir.model.access.csv',
         'views/timesheet.xml',
         'data/data.xml',
-        'report/engineer_timesheet_report'
+        'data/mail_template.xml',
+        'report/report.xml',
+        'report/eng_timesheet.xml'
     ],
     'demo': [],
     'qweb': [],

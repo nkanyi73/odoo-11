@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+         <report
+            string="Engineer Timesheet"
+            id="report_engineer_timesheet"
+            model="om.timesheet"
+            name="timesheets.engineer_report"
+            file="timesheets.engineer_report"
+            report_type="qweb-pdf"
+        />
+    </data>
+</odoo>

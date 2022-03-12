@@ -41,6 +41,9 @@
         <field name="model">om.timesheet</field>
         <field name="arch" type="xml">
             <form string="New Timesheet">
+                <header>
+                    <button name="action_eng_report" type="object" string="Send Report" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <group>

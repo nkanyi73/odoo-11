@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!--         <template id="report_engineer_timesheet">-->
+        <!--            <t t-call="web.html_container">-->
+        <!--                <t t-foreach="docs" t-as="doc">-->
+        <!--                    <h2>Engineer Timesheet</h2>-->
+        <!--                </t>-->
+        <!--            </t>-->
+        <!--        </template>-->
+
+        <template id="engineer_report">
+            <t t-call="web.external_layout">
+                <t t-call="web.html_container">
+                    <div class="header" style="border-bottom: 2px solid black">
+                        <h3 class="text-center">Engineer Timesheet</h3>
+                        <!--                <h4 class="text-center">-->
+                        <!--                    <strong>From</strong>:-->
+                        <!--                    <t t-esc="date_start"/>-->
+                        <!--                    <strong>To</strong>:-->
+                        <!--                    <t t-esc="date_end"/>-->
+                        <!--                </h4>-->
+                    </div>
+                    <div>
+                        <p>This is a list of timesheet entries for<span t-esc="engineer_id"/>.
+                        </p>
+                    </div>
+                    <div class="article">
+                        <table class="table table-condensed table-bordered" style="width: 100%">
+                            <thead>
+                                <th class="text-center">Entry No</th>
+                                <th class="text-center">Ticket No</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Engineer Name</th>
+                                <th class="text-center">From</th>
+                                <th class="text-center">To</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Delay in departure</th>
+                                <th class="text-center">Wait Time</th>
+                                <th class="text-center">Time on travel</th>
+                                <th class="text-center">Time on job</th>
+                                <th class="text-center">Time exceeded</th>
+                                <th class="text-center">Reason for delay</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs" t-as="doc">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="doc.name"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.ticket_no.id"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.final_time"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.engineer_id.name"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.dept_name"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.dest_name"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.category"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.purpose"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.delay"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.wait_time"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.travel_time"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="job_time"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.over_time"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-esc="doc.reason"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="footer">
+                        <div class="row text-center" style="border-top: 1px solid black;">
+                            <div class="col col-3 offset-9 text-right">
+                                <ul class="list-inline mt-2">
+                                    <li class="list-inline-item">Page:</li>
+                                    <li class="list-inline-item">
+                                        <span class="page"/>
+                                    </li>
+                                    <li class="list-inline-item">/</li>
+                                    <li class="list-inline-item">
+                                        <span class="topage"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

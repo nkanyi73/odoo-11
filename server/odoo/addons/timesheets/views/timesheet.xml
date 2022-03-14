@@ -13,7 +13,7 @@
                 <group expand="1" string="Group By">
                     <filter string="Engineer" name="engineer" context="{'group_by':'engineer_id'}"/>
                     <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
-                    <filter string="Day" name="day" context="{'group_by':'stored_date'}"/>
+                    <filter string="Day" name="day" context="{'group_by':'real_date'}"/>
                 </group>
             </search>
         </field>

@@ -47,11 +47,16 @@ class Timesheet(models.Model):
     other_employees = fields.Char(string='Other Employees')
     reason = fields.Text(string='Reason for delay')
     over_time = fields.Char(string='Time exceeded', compute='_get_over_time')
-    stored_date = fields.Char(compute='_get_stored', store=True)
+    stored_date = fields.Char(compute='_get_stored')
+    real_date = fields.Char(compute='_get_date', store=True)
 
     def _get_stored(self):
-        for stored in self:
-            stored.stored_date = stored.final_time
+        for rec in self:
+            rec.stored_date = rec.final_time
+
+    def _get_date(self):
+        for rec in self:
+            rec.real_date = rec.stored_date
 
     def _get_over_time(self):
         for over in self:
@@ -154,9 +159,9 @@ class Timesheet(models.Model):
 
     def _get_no_of_jobs(self):
         for jb in self:
-            if jb.stored_date:
+            if jb.real_date:
                 job_count = jb.env['om.timesheet'].search_count(
-                    ['&', ('stored_date', '=', jb.stored_date), ('engineer_id', '=', jb.engineer_id.id)])
+                    ['&', ('real_date', '=', jb.real_date), ('engineer_id', '=', jb.engineer_id.id)])
                 # , ('final_time', '=', self.final_time)
                 jb.no_of_jobs = job_count
             else:

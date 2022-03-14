@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    'name' : 'Timesheet Management',
-    'version' : '1.1',
+    'name': 'Timesheet Management',
+    'version': '1.1',
     'summary': 'Manages organization timesheets',
     'sequence': -100,
     'description': """

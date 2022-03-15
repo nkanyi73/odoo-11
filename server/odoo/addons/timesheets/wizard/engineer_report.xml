@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="engineer_report_form" model="ir.ui.view">
+        <field name="name">engineer.report.wizard.form</field>
+        <field name="model">engineer.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Engineer Report">
+                <group>
+                    <group>
+                        <field name="engineer_id"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_report_engineer" model="ir.actions.act_window">
+        <field name="name">Print Engineer Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">engineer.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="engineer_report_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

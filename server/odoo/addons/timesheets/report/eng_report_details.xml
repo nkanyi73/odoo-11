@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_engineer_wizard">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe-structure">
+                            <div class="text-center">
+                                <h2>Timesheet Report</h2>
+                            </div>
+                            <div style="display = flex;">
+                                <p>Patient name:</p>
+                                <t t-esc="docs"/>
+                                <t t-foreach="docs" t-as="line">
+                                    <p t-field="line.engineer_id"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+
+</odoo>

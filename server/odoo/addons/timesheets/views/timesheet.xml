@@ -13,7 +13,7 @@
                 <group expand="1" string="Group By">
                     <filter string="Engineer" name="engineer" context="{'group_by':'engineer_id'}"/>
                     <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
-                    <filter string="Day" name="day" context="{'group_by':'stored_date'}"/>
+                    <filter string="Day" name="day" context="{'group_by':'real_date'}"/>
                 </group>
             </search>
         </field>
@@ -23,15 +23,20 @@
         <field name="name">om.timesheet.tree</field>
         <field name="model">om.timesheet</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="exceeded == True">
+            <tree decoration-danger="exceeded == True" default_order="create_date desc">
                 <field name="create_date"/>
                 <field name="engineer_id" string="Engineer Name"/>
-                <field name="ticket_no"/>
+		<field name="category"/>
+                <field name="purpose"/>
                 <field name="dept_name"/>
                 <field name="dest_name"/>
-                <field name="category"/>
-                <field name="status"/>
-                <field name="exceeded" string="Delaying"/>
+		<field name="time_in"/>
+		<field name="time_out"/>
+		<field name="job_time"/>
+		<field name="coordinator"/>
+		<field name="status"/>
+		<field name="status_comment"/>
+                <field name="exceeded" string="Delayed"/>
             </tree>
         </field>
     </record>
@@ -52,12 +57,12 @@
                             <field name="ticket_no" string="Related Ticket Number"/>
                             <field name="engineer_id" string="Engineer Name"/>
                             <field name="status"/>
+			    <field name="category"/>
                         </group>
                         <group>
                             <field name="create_date"/>
                             <field name="other_employees"/>
                             <field name="coordinator"/>
-                            <field name="category"/>
                         </group>
                     </group>
                     <group>
@@ -84,7 +89,6 @@
                                     <field name="company_hours"/>
                                     <field name="delay"/>
                                     <field name="wait_time"/>
-                                    <field name="no_of_jobs" string="Jobs Today"/>
                                 </group>
                                 <group>
                                     <field name="exp_completion_time"/>

@@ -10,5 +10,13 @@
             <field name="padding">4</field>
         </record>
 
+        <!-- Sequences for sales.timesheet -->
+        <record id="sales_seq_timesheet" model="ir.sequence">
+            <field name="name">Sales Timesheet Entry</field>
+            <field name="code">sales.timesheet.entry</field>
+            <field name="prefix">ST</field>
+            <field name="padding">5</field>
+        </record>
+
     </data>
 </odoo>

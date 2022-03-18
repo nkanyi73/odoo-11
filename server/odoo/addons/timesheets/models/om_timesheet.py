@@ -29,29 +29,34 @@ class Timesheet(models.Model):
     status_comment = fields.Text(string='Status Comment', translate=True)
     category = fields.Selection([
         ('inhouse', 'In-house'),
-        ('demo_poc', 'Demo & POC'), ('delivery', 'Delivery'),
-        ('call_out', 'Call Out'), ('installation', 'Installation'),
-        ('wlan', 'WLan'), ('survey', 'AK Survey'),
-        ('ak_installation', 'AK Installation'), ('relocation', 'AK Relocation'),
-        ('survey', 'Survey'), ('tel_call_out', 'Telcom Call Out'),
-        ('support', 'AK Support'), ('collection', 'Kit Collection')
+        ('demopoc', 'Demo & POC'), ('delivery', 'Delivery'),
+        ('callout', 'Call Out'), ('installation', 'Installation'),
+        ('wlan', 'WLan'), ('aksurvey', 'AK Survey'),
+        ('installation', 'AK Installation'), ('relocation', 'AK Relocation'),
+        ('survey', 'Survey'), ('telcom', 'Telcom Call Out'),
+        ('support', 'AK Support'), ('kit_collection', 'Kit Collection')
     ], required=True)
     company_hours = fields.Char(string='Company Hours', compute='_get_company_hours')
     no_of_jobs = fields.Integer(string='Number of jobs today', compute='_get_no_of_jobs')
     final_time = fields.Char(string='Job date', compute='_transform_created_on')
     delay = fields.Char(string='Delay in departure', compute='_get_delay')
-    coordinator = fields.Char(string='Coordinator')
+    coordinator = fields.Many2one(comodel_name='res.users', string='Coordinator')
     name = fields.Char(string='Entry Number', readonly=True, required=True, copy=False, default=lambda self: _('New'))
     exp_completion_time = fields.Char(string='Expected Completion Time', compute='_get_completion')
     exceeded = fields.Boolean(string='Job', compute='_get_exceeded')
     other_employees = fields.Char(string='Other Employees')
     reason = fields.Text(string='Reason for delay')
     over_time = fields.Char(string='Time exceeded', compute='_get_over_time')
-    stored_date = fields.Char(compute='_get_stored', store=True)
+    stored_date = fields.Char(compute='_get_stored')
+    real_date = fields.Char(compute='_get_date', store=True)
 
     def _get_stored(self):
-        for stored in self:
-            stored.stored_date = stored.final_time
+        for rec in self:
+            rec.stored_date = rec.final_time
+
+    def _get_date(self):
+        for rec in self:
+            rec.real_date = rec.final_time
 
     def _get_over_time(self):
         for over in self:
@@ -97,15 +102,15 @@ class Timesheet(models.Model):
         for el in self:
             if el.time_in:
                 timeIn = fields.datetime.strptime(el.time_in, '%Y-%m-%d %H:%M:%S')
-                if el.category == "tel_call_out" or el.category == "support" or el.category == "call_out":
+                if el.category == "telcom" or el.category == "support" or el.category == "callout":
                     completion = timeIn + timedelta(hours=5, minutes=00)
                     # completion = completion.time()
                     el.exp_completion_time = str(completion)
-                elif el.category == "survey" or el.category == "demo_poc":
+                elif el.category == "survey" or el.category == "demopoc" or el.category == "aksurvey":
                     completion = timeIn + timedelta(hours=4, minutes=00)
                     # completion = completion.time()
                     el.exp_completion_time = str(completion)
-                elif el.category == "installation" or el.category == "ak_installation" or el.category == "relocation":
+                elif el.category == "installation"  or el.category == "relocation":
                     completion = timeIn + timedelta(hours=7, minutes=00)
                     # completion = completion.time()
                     el.exp_completion_time = str(completion)
@@ -154,9 +159,9 @@ class Timesheet(models.Model):
 
     def _get_no_of_jobs(self):
         for jb in self:
-            if jb.stored_date:
+            if jb.real_date:
                 job_count = jb.env['om.timesheet'].search_count(
-                    ['&', ('stored_date', '=', jb.stored_date), ('engineer_id', '=', jb.engineer_id.id)])
+                    ['&', ('real_date', '=', jb.real_date), ('engineer_id', '=', jb.engineer_id.id)])
                 # , ('final_time', '=', self.final_time)
                 jb.no_of_jobs = job_count
             else:
@@ -196,6 +201,11 @@ class Timesheet(models.Model):
             else:
                 d.delay = "00:00:00"
 
+    def action_eng_report(self):
+        template_id = self.env.ref('timesheets.engineer_report_mail').id
+        self.env['mail.template'].browse(template_id).send_mail(self.id, force_send=True)
+
+
     @api.onchange('ticket_no')
     def onchange_ticket_no(self):
         if self.ticket_no:
@@ -203,8 +213,8 @@ class Timesheet(models.Model):
                 self.purpose = self.ticket_no.description
             if self.ticket_no.stage_id:
                 self.status = self.ticket_no.stage_id.name
-            if self.ticket_no.user_id.name:
-                self.coordinator = self.ticket_no.user_id.name
+            if self.ticket_no.user_id:
+                self.coordinator = self.ticket_no.user_id
             if self.ticket_no.status_cmt:
                 self.status_comment = self.ticket_no.status_cmt
             if self.ticket_no.emp_charge:

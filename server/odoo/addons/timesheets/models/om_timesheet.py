@@ -25,7 +25,7 @@ class Timesheet(models.Model):
     job_time = fields.Char(string="Time taken to complete task", compute="_get_job_time")
     # project_id = fields.Many2one(comodel_name='project.project', string='Associated Project')
     engineer_id = fields.Many2one(comodel_name='hr.employee', string='Employee')
-    status = fields.Char(string='Status')
+    status = fields.Many2one(string='Status', comodel_name='helpdesk_lite.stage', related='ticket_no.stage_id')
     status_comment = fields.Text(string='Status Comment', translate=True)
     category = fields.Selection([
         ('inhouse', 'In-house'),
@@ -49,6 +49,12 @@ class Timesheet(models.Model):
     over_time = fields.Char(string='Time exceeded', compute='_get_over_time')
     stored_date = fields.Char(compute='_get_stored')
     real_date = fields.Char(compute='_get_date', store=True)
+    status_com = fields.Char(compute='_get_status', string='Job Status', store=True)
+
+    def _get_status(self):
+        for rec in self:
+            if rec.status:
+                rec.status_com = rec.status.name
 
     def _get_stored(self):
         for rec in self:
@@ -212,7 +218,7 @@ class Timesheet(models.Model):
             if self.ticket_no.description:
                 self.purpose = self.ticket_no.description
             if self.ticket_no.stage_id:
-                self.status = self.ticket_no.stage_id.name
+                self.status = self.ticket_no.stage_id
             if self.ticket_no.user_id:
                 self.coordinator = self.ticket_no.user_id
             if self.ticket_no.status_cmt:

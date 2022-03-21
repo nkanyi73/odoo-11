@@ -8,14 +8,13 @@
     """,
     'category': 'Human Resources',
     'website': 'https://www.odoo.com/page/timesheets',
-    'depends': [],
+    'depends': ['helpdesk_lite'],
     'data': [
         'security/ir.model.access.csv',
         'data/data.xml',
         'views/timesheet.xml',
         'views/sales_timesheet.xml',
-        'report/engineer_timesheet_report.xml',
-
+        'report/engineer_timesheet_report.xml'
     ],
     'demo': [],
     'qweb': [],

@@ -110,7 +110,7 @@
     </record>
 
     <record id="action_timesheet" model="ir.actions.act_window">
-        <field name="name">Timesheets</field>
+        <field name="name">Engineer Timesheets</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">om.timesheet</field>
         <field name="view_mode">tree,kanban,form</field>

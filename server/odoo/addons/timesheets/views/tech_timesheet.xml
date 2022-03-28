@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="tech_timesheet_search" model="ir.ui.view">
+            <field name="name">tech.timesheet.search</field>
+            <field name="model">tech.timesheet</field>
+            <field name="arch" type="xml">
+                <search string="Search Timesheets">
+                    <field name="user_id"/>
+                    <field name="create_date"/>
+                    <field name="quotation_ref"/>
+                    <field name="potential_no"/>
+                    <field name="opportunity_id"/>
+                    <field name="status"/>
+                    <field name="follow_up_status"/>
+                    <field name="coordinator"/>
+                    <separator/>
+                    <group expand="1" string="Group By">
+                        <filter string="Assigned To" name="technician" context="{'group_by':'user_id'}"/>
+                        <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
+                        <!--                    <filter string="Day" name="day" context="{'group_by':'final_time'}"/>-->
+                        <filter string="Day" context="{'group_by': 'create_date:day'}"/>
+                        <filter string="Last Week" name="last_week" separator="1"
+                                domain="[('create_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                ('create_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+
+                        <filter string="This Week" name="this_week" separator="1"
+                                domain="[('create_date', '&lt;=', ((context_today()+relativedelta(weeks=0, days=7, weekday=-1)).strftime('%Y-%m-%d'))),
+                ('create_date', '&gt;=', ((context_today()-relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_tech_timesheet" model="ir.actions.act_window">
+            <field name="name">Product Expert/Manager Timesheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tech.timesheet</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Record a new timesheet.
+                </p>
+            </field>
+        </record>
+
+        <record id="tech_timesheet_tree" model="ir.ui.view">
+            <field name="name">tech.timesheet.tree</field>
+            <field name="model">tech.timesheet</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="delayed == True" default_order="create_date desc">
+                    <field name="create_date"/>
+                    <field name="task_activity"/>
+                    <field name="line"/>
+                    <field name="user_id"/>
+                    <field name="coordinator"/>
+                    <field name="status"/>
+                    <field name="follow_up_status"/>
+                    <field name="status_comment"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
+                    <field name="duration"/>
+                    <field name="delayed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tech_timesheet_form" model="ir.ui.view">
+            <field name="name">tech.timesheet.form</field>
+            <field name="model">tech.timesheet</field>
+            <field name="arch" type="xml">
+                <form string="New Timesheet">
+                    <sheet>
+                        <div class="oe_title">
+                            <group>
+                                <field name="name" string="Entry Number" readonly="1"/>
+                            </group>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="task_activity"/>
+                                <field name="solution_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'implementation',
+                                'follow_up', 'rnd', 'meeting', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="sales_cat" attrs="{'invisible':[('task_activity', 'in', ('sol_design', 'implementation',
+                                'follow_up', 'rnd', 'meeting', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="implementation_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'sol_design',
+                                'follow_up', 'rnd', 'meeting', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="follow_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'implementation',
+                                'sol_design', 'rnd', 'meeting', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="meeting_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'implementation',
+                                'follow_up', 'rnd', 'sol_design', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="rnd_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'implementation',
+                                'follow_up', 'sol_design', 'meeting', 'lpo_follow', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="lpo_cat" attrs="{'invisible':[('task_activity', 'in', ('pre_sales', 'implementation',
+                                'follow_up', 'sol_design', 'meeting', 'rnd', 'support', 'approval', 'vendor'))]}"/>
+                                <field name="vendor_cat" attrs="{'invisible': [('task_activity', 'in', ('sol_design', 'pre_sales',
+                                'implementation', 'follow_up', 'meeting', 'rnd', 'lpo_follow', 'support', 'approval'))]}"/>
+                                <field name="user_id"/>
+                                <field name="customer_name"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="create_date"/>
+                                <field name="ticket_no" attrs="{'invisible':[('task_activity', 'in', ('approval', 'support', 'vendor', 'pre_sales', 'lpo_follow',
+                                'follow_up', 'rnd', 'sol_design', 'meeting'))], 'required':[('task_activity', '=', 'implementation')]}"/>
+                                <field name="quotation_ref" attrs="{'invisible':[('task_activity', 'in', ('support', 'vendor', 'pre_sales', 'implementation',
+                                'sol_design', 'follow_up', 'rnd', 'meeting'))], 'required':[('task_activity', 'in', ('lpo_follow', 'approval'))]}"/>
+                                <field name="opportunity_id" string="Opportunity Name" attrs="{'invisible':[('task_activity', 'in', ('approval', 'support', 'vendor', 'lpo_follow', 'implementation',
+                                'sol_design', 'follow_up', 'rnd', 'meeting'))], 'required':[('task_activity', '=', 'pre_sales')]}"/>
+                                <field name="potential_no" attrs="{'invisible':[('task_activity', 'in', ('support', 'approval', 'vendor', 'implementation', 'lpo_follow',
+                                'rnd', 'meeting', 'pre_sales'))], 'required':[('task_activity', 'in', ('follow_up', 'sol_design'))]}"/>
+                                <field name="line"/>
+                                <field name="coordinator"/>
+                                <field name="follow_up_status"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="assigned_date"/>
+                                <field name="start_time"/>
+                            </group>
+                            <group>
+                                <field name="end_time" attrs="{'required': [('status', '=', 'complete')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="status_comment"/>
+                        </group>
+                        <notebook>
+                            <page string="Time Data">
+                                <group>
+                                    <field name="duration"/>
+                                    <field name="response_time"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <menuitem id="menu_tech_timesheet"
+                  name="Product Expert/Manager"
+                  parent="timesheet_child_root"
+                  action="action_tech_timesheet"
+                  sequence="15"/>
+
+
+    </data>
+</odoo>

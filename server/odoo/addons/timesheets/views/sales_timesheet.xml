@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <record id="sales_timesheet_search" model="ir.ui.view">
+        <field name="name">sales.timesheet.search</field>
+        <field name="model">sales.timesheet</field>
+        <field name="arch" type="xml">
+            <search string="Search Timesheets">
+                <field name="employee_id"/>
+                <field name="quotation_ref"/>
+                <field name="potential_no"/>
+                <field name="opportunity_id"/>
+                <field name="create_date"/>
+                <field name="sales_task_activity"/>
+                <field name="customer_name"/>
+                <field name="line"/>
+                <field name="status"/>
+                <field name="follow_up"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Assigned To" name="employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
+                    <!--                    <filter string="Day" name="day" context="{'group_by':'final_time'}"/>-->
+                    <filter string="Day" context="{'group_by': 'create_date:day'}"/>
+                    <filter string="Last Week" name="last_week" separator="1"
+                            domain="[('create_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                ('create_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+
+                    <filter string="This Week" name="this_week" separator="1"
+                            domain="[('create_date', '&lt;=', ((context_today()+relativedelta(weeks=0, days=7, weekday=-1)).strftime('%Y-%m-%d'))),
+                ('create_date', '&gt;=', ((context_today()-relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))]"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <record id="action_sales_timesheet" model="ir.actions.act_window">
         <field name="name">Sales Timesheets</field>
@@ -13,29 +45,35 @@
         </field>
     </record>
 
-    <record id="timesheet_tree" model="ir.ui.view">
+    <record id="sales_timesheet_tree" model="ir.ui.view">
         <field name="name">sales.timesheet.tree</field>
         <field name="model">sales.timesheet</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree default_order="create_date desc">
                 <field name="create_date"/>
                 <field name="req_date"/>
-                <field name="task_activity"/>
-                <field name="customer_name"/>
+                <field name="sales_task_activity"/>
+                <field name="description"/>
                 <field name="line"/>
-                <field name="employee_id"/>
-<!--                <field name="amount"/>-->
-                <field name="follow_up"/>
+                <field name="customer_name"/>
+                <field name="employee_id" string="Assigned To"/>
                 <field name="status"/>
                 <field name="status_comment"/>
-                <field name="status_comment"/>
+                <field name="amount" sum="Total Amount"/>
+                <field name="follow_up"/>
                 <field name="start_time"/>
                 <field name="end_time"/>
+                <field name="duration"/>
+                <field name="quotation_ref"/>
+                <field name="potential_no" string="Potential Name"/>
+
+
+
             </tree>
         </field>
     </record>
 
-    <record id="timesheet_form" model="ir.ui.view">
+    <record id="sales_timesheet_form" model="ir.ui.view">
         <field name="name">sales.timesheet.form</field>
         <field name="model">sales.timesheet</field>
         <field name="arch" type="xml">
@@ -50,10 +88,28 @@
                         <group>
                             <field name="req_date"/>
                             <field name="employee_id"/>
+                            <field name="sales_task_activity"/>
                         </group>
                         <group>
                             <field name="create_date"/>
                             <field name="customer_name"/>
+                            <field name="quotation_ref" attrs="{'invisible':[('sales_task_activity', 'in', ('rfq',
+                            'tender_solution','meeting', 'rfq_prep', 'tendering', 'pre_qual', 'lead_gen',
+                            'cold_call', 'price_follow', 'push_P', 'stand_meet', 'depart_meet', 'report',
+                            'training', 'client_meet', 'tend_meet', 'quot_soln'))], 'required':[('sales_task_activity', 'in',
+                            ('lpo_process', 'lpo_follow', 'quot_follow', 'quotation_approval',
+                              'quotation_preparation'))]}"/>
+                            <field name="opportunity_id" string="Opportunity Name" attrs="{'invisible':[('sales_task_activity', 'in', ('rfq',
+                            'tender_solution', 'meeting', 'rfq_prep', 'tendering', 'pre_qual',
+                             'price_follow', 'push_P', 'stand_meet', 'depart_meet', 'report', 'training',
+                             'tend_meet', 'quot_soln', 'client_meet', 'lpo_process', 'lpo_follow', 'quot_follow', 'quotation_approval',
+                              'quotation_preparation'))], 'required':[('sales_task_activity', 'in', ('lead_gen', 'cold_call'))]}"/>
+                            <field name="potential_no" string="Potential Name" attrs="{'invisible':[('sales_task_activity', 'in', ('lead_gen', 'cold_call',
+                                                            'lpo_process', 'lpo_follow', 'report', 'training', 'depart_meet', 'quot_follow',
+                                                            'quotation_approval', 'meeting', 'stand_meet', 'quotation_preparation'))],
+                            'required':[('sales_task_activity', 'in', ('rfq', 'tender_solution', 'rfq_prep',
+                            'tendering', 'pre_qual', 'price_follow', 'push_P', 'tend_meet', 'quot_soln'))]}"/>
+                            <field name="line"/>
                         </group>
                     </group>
                     <group>
@@ -61,18 +117,27 @@
                     </group>
                     <group>
                         <group>
-                            <field name="task_activity"/>
-<!--                            <field name="amount"/>-->
+                            <field name="approved_by"/>
+                            <field name="amount"/>
+                            <field name="start_time"/>
                             <field name="follow_up"/>
                         </group>
                         <group>
-                            <field name="line"/>
+                            <field name="authorized_by"/>
                             <field name="status"/>
+                            <field name="end_time" attrs="{'required': [('status', '=', 'complete')]}"/>
                         </group>
                     </group>
                     <group>
                         <field name="status_comment"/>
                     </group>
+                    <notebook>
+                        <page string="Time Data">
+                            <group>
+                                <field name="duration"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

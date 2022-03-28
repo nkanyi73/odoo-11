@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-
     <record id="timesheet_search" model="ir.ui.view">
         <field name="name">om.timesheet.search</field>
         <field name="model">om.timesheet</field>
         <field name="arch" type="xml">
             <search string="Search Timesheets">
                 <field name="engineer_id"/>
-                <field name="final_time"/>
+                <field name="status"/>
+                <field name="ticket_title"/>
+                <field name="category"/>
+                <field name="coordinator"/>
+                <field name="dept_name"/>
+                <field name="dest_name"/>
                 <separator/>
                 <group expand="1" string="Group By">
                     <filter string="Engineer" name="engineer" context="{'group_by':'engineer_id'}"/>
                     <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
-                    <filter string="Day" name="day" context="{'group_by':'real_date'}"/>
+                    <!--                    <filter string="Day" name="day" context="{'group_by':'final_time'}"/>-->
+                    <filter string="Day" context="{'group_by': 'create_date:day'}"/>
+                    <filter string="Last Week" name="last_week" separator="1"
+                            domain="[('create_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                ('create_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+
+                    <filter string="This Week" name="this_week" separator="1"
+                            domain="[('create_date', '&lt;=', ((context_today()+relativedelta(weeks=0, days=7, weekday=-1)).strftime('%Y-%m-%d'))),
+                ('create_date', '&gt;=', ((context_today()-relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))]"/>
                 </group>
             </search>
         </field>
@@ -25,17 +37,18 @@
         <field name="arch" type="xml">
             <tree decoration-danger="exceeded == True" default_order="create_date desc">
                 <field name="create_date"/>
+                <field name="ticket_title"/>
                 <field name="engineer_id" string="Engineer Name"/>
-		<field name="category"/>
+                <field name="category"/>
                 <field name="purpose"/>
                 <field name="dept_name"/>
                 <field name="dest_name"/>
-		<field name="time_in"/>
-		<field name="time_out"/>
-		<field name="job_time"/>
-		<field name="coordinator"/>
-		<field name="status"/>
-		<field name="status_comment"/>
+                <field name="time_in"/>
+                <field name="time_out"/>
+                <field name="job_time"/>
+                <field name="coordinator"/>
+                <field name="status"/>
+                <field name="status_comment"/>
                 <field name="exceeded" string="Delayed"/>
             </tree>
         </field>
@@ -50,6 +63,7 @@
                     <div class="oe_title">
                         <group>
                             <field name="name" string="Entry Number" readonly="1"/>
+                            <field name="ticket_title"/>
                         </group>
                     </div>
                     <group>
@@ -57,7 +71,8 @@
                             <field name="ticket_no" string="Related Ticket Number"/>
                             <field name="engineer_id" string="Engineer Name"/>
                             <field name="status"/>
-			    <field name="category"/>
+                            <field name="category"/>
+                            <!--                            <field name="status_com"/>-->
                         </group>
                         <group>
                             <field name="create_date"/>
@@ -74,7 +89,7 @@
                             <field name="dept_name" placeholder="From"/>
                             <field name="exp_dept_time"/>
                             <field name="arr_time" placeholder="Time engineer arrived"/>
-                            <field name="time_out" placeholder="Time engineer left"/>
+                            <field name="time_out" placeholder="Time engineer left" attrs="{'required': [('status', '=', 'closed')]}"/>
                         </group>
                         <group>
                             <field name="dest_name" placeholder="To"/>

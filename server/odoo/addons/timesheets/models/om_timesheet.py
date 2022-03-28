@@ -25,7 +25,7 @@ class Timesheet(models.Model):
     job_time = fields.Char(string="Time taken to complete task", compute="_get_job_time")
     # project_id = fields.Many2one(comodel_name='project.project', string='Associated Project')
     engineer_id = fields.Many2one(comodel_name='hr.employee', string='Employee')
-    status = fields.Many2one(string='Status', comodel_name='helpdesk_lite.stage', related='ticket_no.stage_id')
+    status = fields.Many2one(string='Status', comodel_name='helpdesk_lite.stage', related='ticket_no.stage_id', store=True)
     status_comment = fields.Text(string='Status Comment', translate=True)
     category = fields.Selection([
         ('inhouse', 'In-house'),
@@ -49,12 +49,7 @@ class Timesheet(models.Model):
     over_time = fields.Char(string='Time exceeded', compute='_get_over_time')
     stored_date = fields.Char(compute='_get_stored')
     real_date = fields.Char(compute='_get_date', store=True)
-    status_com = fields.Char(compute='_get_status', string='Job Status', store=True)
-
-    def _get_status(self):
-        for rec in self:
-            if rec.status:
-                rec.status_com = rec.status.name
+    ticket_title = fields.Char(string='Ticket Title', related='ticket_no.name_char')
 
     def _get_stored(self):
         for rec in self:
@@ -175,9 +170,7 @@ class Timesheet(models.Model):
 
     def _transform_created_on(self):
         for tme in self:
-            print("date1")
             if tme.create_date:
-                print("date")
                 createDate = fields.datetime.strptime(tme.create_date, '%Y-%m-%d %H:%M:%S')
                 createDate = createDate.date()
                 tme.final_time = str(createDate)
@@ -229,6 +222,8 @@ class Timesheet(models.Model):
                 self.category = self.ticket_no.category
             if self.ticket_no.other_employees:
                 self.other_employees = self.ticket_no.other_employees
+            if self.ticket_no.name_char:
+                self.ticket_title = self.ticket_no.name_char
 
     @api.model
     def create(self, vals):

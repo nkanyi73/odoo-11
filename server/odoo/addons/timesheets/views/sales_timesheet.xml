@@ -94,7 +94,7 @@
                             <field name="create_date"/>
                             <field name="customer_name"/>
                             <field name="quotation_ref" attrs="{'invisible':[('sales_task_activity', 'in', ('rfq',
-                            'tender_solution','meeting', 'rfq_prep', 'tendering', 'pre_qual', 'lead_gen',
+                            'tender_solution','meeting', 'intro', 'email_follow_up', 'rfq_prep', 'tendering', 'pre_qual', 'lead_gen',
                             'cold_call', 'price_follow', 'push_P', 'stand_meet', 'depart_meet', 'report',
                             'training', 'client_meet', 'tend_meet', 'quot_soln'))], 'required':[('sales_task_activity', 'in',
                             ('lpo_process', 'lpo_follow', 'quot_follow', 'quotation_approval',
@@ -103,12 +103,12 @@
                             'tender_solution', 'meeting', 'rfq_prep', 'tendering', 'pre_qual',
                              'price_follow', 'push_P', 'stand_meet', 'depart_meet', 'report', 'training',
                              'tend_meet', 'quot_soln', 'client_meet', 'lpo_process', 'lpo_follow', 'quot_follow', 'quotation_approval',
-                              'quotation_preparation'))], 'required':[('sales_task_activity', 'in', ('lead_gen', 'cold_call'))]}"/>
-                            <field name="potential_no" string="Potential Name" attrs="{'invisible':[('sales_task_activity', 'in', ('lead_gen', 'cold_call',
-                                                            'lpo_process', 'lpo_follow', 'report', 'training', 'depart_meet', 'quot_follow',
-                                                            'quotation_approval', 'meeting', 'stand_meet', 'quotation_preparation'))],
-                            'required':[('sales_task_activity', 'in', ('rfq', 'tender_solution', 'rfq_prep',
-                            'tendering', 'pre_qual', 'price_follow', 'push_P', 'tend_meet', 'quot_soln'))]}"/>
+                              'quotation_preparation'))], 'required':[('sales_task_activity', 'in', ('intro', 'email_follow_up', 'lead_gen', 'cold_call'))]}"/>
+<!--                            <field name="potential_no" string="Potential Name" attrs="{'invisible':[('sales_task_activity', 'in', ('lead_gen', 'cold_call',-->
+<!--                                                            'lpo_process', 'intro', 'email_follow_up', 'lpo_follow', 'report', 'training', 'depart_meet', 'quot_follow',-->
+<!--                                                            'quotation_approval', 'meeting', 'stand_meet', 'quotation_preparation'))],-->
+<!--                            'required':[('sales_task_activity', 'in', ('rfq', 'tender_solution', 'rfq_prep',-->
+<!--                            'tendering', 'pre_qual', 'price_follow', 'push_P', 'tend_meet', 'quot_soln'))]}"/>-->
                             <field name="line"/>
                         </group>
                     </group>
@@ -144,7 +144,7 @@
     </record>
 
     <menuitem id="menu_sales_timesheet"
-              name="Sales Timesheets"
+              name="Sales Admin Timesheets"
               parent="timesheet_child_root"
               action="action_sales_timesheet"
               sequence="15"/>

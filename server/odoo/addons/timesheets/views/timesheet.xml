@@ -37,9 +37,9 @@
         <field name="arch" type="xml">
             <tree decoration-danger="exceeded == True" default_order="create_date desc">
                 <field name="create_date"/>
-                <field name="ticket_title"/>
                 <field name="engineer_id" string="Engineer Name"/>
                 <field name="category"/>
+                <field name="ticket_title"/>
                 <field name="purpose"/>
                 <field name="dept_name"/>
                 <field name="dest_name"/>
@@ -49,6 +49,8 @@
                 <field name="coordinator"/>
                 <field name="status"/>
                 <field name="status_comment"/>
+                <field name="over_time"/>
+                <field name="reason"/>
                 <field name="exceeded" string="Delayed"/>
             </tree>
         </field>

@@ -53,6 +53,7 @@
                     <field name="create_date"/>
                     <field name="task_activity"/>
                     <field name="line"/>
+                    <field name="customer_name"/>
                     <field name="user_id"/>
                     <field name="coordinator"/>
                     <field name="status"/>
@@ -108,8 +109,8 @@
                                 'sol_design', 'follow_up', 'rnd', 'meeting'))], 'required':[('task_activity', 'in', ('lpo_follow', 'approval'))]}"/>
                                 <field name="opportunity_id" string="Opportunity Name" attrs="{'invisible':[('task_activity', 'in', ('approval', 'support', 'vendor', 'lpo_follow', 'implementation',
                                 'sol_design', 'follow_up', 'rnd', 'meeting'))], 'required':[('task_activity', '=', 'pre_sales')]}"/>
-                                <field name="potential_no" attrs="{'invisible':[('task_activity', 'in', ('support', 'approval', 'vendor', 'implementation', 'lpo_follow',
-                                'rnd', 'meeting', 'pre_sales'))], 'required':[('task_activity', 'in', ('follow_up', 'sol_design'))]}"/>
+<!--                                <field name="potential_no" attrs="{'invisible':[('task_activity', 'in', ('support', 'approval', 'vendor', 'implementation', 'lpo_follow',-->
+<!--                                'rnd', 'meeting', 'pre_sales'))], 'required':[('task_activity', 'in', ('follow_up', 'sol_design'))]}"/>-->
                                 <field name="line"/>
                                 <field name="coordinator"/>
                                 <field name="follow_up_status"/>

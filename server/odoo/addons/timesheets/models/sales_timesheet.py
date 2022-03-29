@@ -13,7 +13,8 @@ class SalesTimesheet(models.Model):
         ('rfq', 'RFQ Solution Design'), ('tender_solution', 'Tender Solution Design'),
         ('meeting', 'Management Meeting'), ('rfq_prep', 'RFQ Preparation'), ('tendering', 'Tendering'),
         ('pre_qual', 'Pre-qualification'), ('lead_gen', 'Lead Generation'), ('cold_call', 'Cold Calling'),
-        ('lpo_process', 'LPO Processing'), ('lpo_follow', 'LPO Follow-Up'), ('quot_follow', 'Quotation Follow-up'),
+        ('lpo_process', 'LPO Processing'), ('lpo_follow', 'LPO Follow-Up'), ('intro', 'Introductory Email'),
+        ('quot_follow', 'Quotation Follow-up'), ('email_follow_up', 'Email Follow-Up'),
         ('price_follow', 'Price Request Follow-up'), ('push_P', 'Pushing for Prices'),
         ('stand_meet', 'Standing Meeting'), ('depart_meet', 'Departmental Meeting'),
         ('report', 'Report'), ('training', 'Training'), ('tend_meet', 'Tender Meeting'), ('client_meet', 'Client Meeting'),
@@ -42,7 +43,7 @@ class SalesTimesheet(models.Model):
     end_time = fields.Datetime(string='End Time')
     quotation_ref = fields.Many2one(comodel_name='sale.order', string='Quotation Reference')
     opportunity_id = fields.Many2one(comodel_name='crm.lead', string='Opportunity ID')
-    potential_no = fields.Many2one(comodel_name='crm.potentials', string='Potential Number')
+    potential_no = fields.Many2one(comodel_name='crm.potentials', string='Potential Name')
     name = fields.Char(string='Entry Number', readonly=True, required=True, copy=False, default=lambda self: _('New'))
     approved_by = fields.Many2one(comodel_name='hr.employee', string='Approved By')
     authorized_by = fields.Many2one(comodel_name='hr.employee', string='Authorized By')

@@ -10,42 +10,41 @@ class TechTimesheet(models.Model):
         ('sol_design', 'Solution Design'), ('pre_sales', 'Pre Sales'),
         ('implementation', 'Technical Implementation'), ('follow_up', 'Follow Up'),
         ('rnd', 'R&D'), ('meeting', 'Meeting'), ('lpo_follow', 'LPO Follow Up'), ('vendor', 'Vendor Engagement'),
-        ('approval', 'Quotation Approval'), ('support', 'Inter-departmental Support')
+        ('approval', 'Quotation Approval'), ('support', 'Inter-departmental Support'), ('report', 'Reporting')
     ], string='Activity Type', default='sol_design', required='true')
     solution_cat = fields.Selection([
         ('tender_soln', 'Tender Solution Design'), ('rfq', 'RFQ Solution Design'),
-        ('quotation_soln', 'Quotation Solution Design'), ('na', 'N/A')
-    ], string='Category (Solution Design)', default='na')
+        ('quotation_soln', 'Quotation Solution Design'),
+    ], string='Category (Solution Design)')
     sales_cat = fields.Selection([
         ('demo', 'Demo'), ('poc', 'POC'), ('pitching', 'Pitching'),
-        ('lead_gen', 'Lead Generation'), ('na', 'N/A')
-    ], string='Category (Pre Sales)', default='na')
+        ('lead_gen', 'Lead Generation'),
+    ], string='Category (Pre Sales)')
     implementation_cat = fields.Selection([
         ('inhouse', 'In-house'),
         ('delivery', 'Delivery'),
         ('callout', 'Call Out'), ('installation', 'Installation'),
-        ('wlan', 'WLan'), ('survey', 'Survey'), ('lan', 'LAN Audit'), ('na', 'N/A')
-    ], string='Category (Technical Implementation)', default='na')
+        ('wlan', 'WLan'), ('survey', 'Survey'), ('lan', 'LAN Audit'),
+    ], string='Category (Technical Implementation)',)
     follow_cat = fields.Selection([
         ('customer_meet', 'Customer Meeting'), ('cold_call', 'Cold Calling'),
-        ('mail_follow', 'Email Follow Up'), ('na', 'N/A')
-    ], string='Category (Follow Up)', default='na')
+        ('mail_follow', 'Email Follow Up'), ('follow_call', 'Follow-up Calling'),
+    ], string='Category (Follow Up)',)
     meeting_cat = fields.Selection([
         ('departmental', 'Departmental Meeting'), ('sales', 'Sales Meeting'), ('external', 'External Meeting'),
-        ('management', 'Management Meeting'), ('na', 'N/A', )
-    ], string='Category', default='na')
+        ('management', 'Management Meeting'),
+    ], string='Category',)
     rnd_cat = fields.Selection([
-        ('certification', 'Certifications'), ('webinar', 'Webinars'), ('training', 'Training'),
-        ('na', 'N/A',)
-    ], string='Category (R&D)', default='na')
+        ('certification', 'Certifications'), ('prod_dev', 'Product Development'), ('webinar', 'Webinars'), ('training', 'Training'),
+    ], string='Category (R&D)')
     lpo_cat = fields.Selection([
         ('customer_meet', 'Customer Meeting'), ('cold_call', 'Cold Calling'),
-        ('mail_follow', 'Email Follow Up'), ('na', 'N/A')
-    ], string='Category (LPO Follow Up)', default='na')
+        ('mail_follow', 'Email Follow Up'), ('feedback', 'Status Feedback Calling')
+    ], string='Category (LPO Follow Up)')
     vendor_cat = fields.Selection([
         ('register', 'Deal Registration'), ('update', 'Vendor Portal Update'),
-        ('other', 'Other'), ('na', 'N/A')
-    ], string="Category (Vendor Engagement)", default='na')
+        ('other', 'Other')
+    ], string="Category (Vendor Engagement)")
     line = fields.Selection([
         ('av', 'Audio Visual'), ('ict_sec', 'ICT Security'), ('ict', 'ICT'),
         ('netsol', 'Netsol'), ('cabling', 'Structured Cabling'),
@@ -65,7 +64,7 @@ class TechTimesheet(models.Model):
         ('hot', 'Hot'), ('warm', 'Warm'),
         ('close_won', 'Closed Won'), ('close_lost', 'Closed Lost'),
         ('cold', 'Cold'), ('n/a', 'N/A'),
-    ], string='Follow up Status', default='na')
+    ], string='Follow up Status')
     duration = fields.Char(string='Time Taken', compute='_get_duration')
     name = fields.Char(string='Entry Number', readonly=True, required=True, copy=False, default=lambda self: _('New'))
     customer_name = fields.Char(string='Customer Name')

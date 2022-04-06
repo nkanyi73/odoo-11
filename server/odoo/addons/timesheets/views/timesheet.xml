@@ -72,7 +72,7 @@
                         <group>
                             <field name="ticket_no" string="Related Ticket Number"/>
                             <field name="engineer_id" string="Engineer Name"/>
-                            <field name="status"/>
+                            <field name="status" required="True"/>
                             <field name="category"/>
                             <!--                            <field name="status_com"/>-->
                         </group>
@@ -83,7 +83,7 @@
                         </group>
                     </group>
                     <group>
-                        <field name="purpose"/>
+                        <field name="purpose" required="True"/>
                         <field name="status_comment"/>
                     </group>
                     <group>

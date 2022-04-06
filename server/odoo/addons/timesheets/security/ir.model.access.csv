@@ -1,2 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_timesheet,access.timesheet,model_om_timesheet,,1,1,1,1
+access_sales,access.sales,model_sales_timesheet,,1,1,1,1
+access_tech,access.tech,model_tech_timesheet,,1,1,1,1
+access_hr,access.hr,model_hr_timesheet,,1,1,1,1
+access_marketing,access.marketing,model_marketing_timesheet,,1,1,1,1
+access_stores,access.stores,model_stores_timesheet,,1,1,1,1
+access_account,access.account,model_account_timesheet,,1,1,1,1
+access_csc,access.csc,model_csc_timesheet,,1,1,1,1
+

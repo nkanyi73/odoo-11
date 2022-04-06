@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="stores_timesheet_search" model="ir.ui.view">
+        <field name="name">stores.timesheet.search</field>
+        <field name="model">stores.timesheet</field>
+        <field name="arch" type="xml">
+            <search string="Search Timesheets">
+                <field name="department"/>
+                <field name="create_date"/>
+                <field name="other_employee"/>
+                <field name="task_activity"/>
+                <field name="employee_id"/>
+                <field name="customer_name"/>
+                <field name="supplier_name"/>
+                <field name="status"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Department" name="department" context="{'group_by':'department'}"/>
+                    <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Task Activity" name="activity" context="{'group_by':'task_activity'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'status'}"/>
+                    <filter string="Date" name="final_time" context="{'group_by':'create_date'}"/>
+                    <!--                    <filter string="Day" name="day" context="{'group_by':'final_time'}"/>-->
+                    <filter string="Day" context="{'group_by': 'create_date:day'}"/>
+                    <filter string="Last Week" name="last_week" separator="1"
+                            domain="[('create_date', '&gt;=', ((context_today()+relativedelta(weeks=-2, days=1, weekday=0)).strftime('%Y-%m-%d'))),
+                ('create_date', '&lt;=', ((context_today()+relativedelta(weeks=-1,weekday=6)).strftime('%Y-%m-%d')))]"/>
+
+                    <filter string="This Week" name="this_week" separator="1"
+                            domain="[('create_date', '&lt;=', ((context_today()+relativedelta(weeks=0, days=7, weekday=-1)).strftime('%Y-%m-%d'))),
+                ('create_date', '&gt;=', ((context_today()-relativedelta(weeks=1, weekday=0)).strftime('%Y-%m-%d')))]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stores_timesheet" model="ir.actions.act_window">
+        <field name="name">Procurement/Stores Timesheet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stores.timesheet</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_department': 1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Record a new timesheet.
+            </p>
+        </field>
+    </record>
+
+    <record id="stores_timesheet_tree" model="ir.ui.view">
+        <field name="name">stores.timesheet.tree</field>
+        <field name="model">stores.timesheet</field>
+        <field name="arch" type="xml">
+            <tree default_order="create_date desc">
+                <field name="create_date"/>
+                <field name="department"/>
+                <field name="task_activity"/>
+                <field name="description"/>
+                <field name="customer_name"/>
+                <field name="supplier_name"/>
+                <field name="employee_id"/>
+                <field name="user"/>
+                <field name="status"/>
+                <field name="status_comment"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+                <field name="duration"/>
+                <field name="amount" sum="Total Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stores_timesheet_form" model="ir.ui.view">
+        <field name="name">stores.timesheet.form</field>
+        <field name="model">stores.timesheet</field>
+        <field name="arch" type="xml">
+            <form string="New Timesheet">
+                <sheet>
+                    <div class="oe_title">
+                        <group>
+                             <field name="department"/>
+                        </group>
+                        <group>
+                            <field name="name" string="Entry Number" readonly="1"/>
+                        </group>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" string="Assigned To"/>
+                            <field name="customer_name"/>
+                            <field name="task_activity"/>
+                        </group>
+                        <group>
+                            <field name="other_employee"/>
+                            <field name="supplier_name"/>
+                            <field name="request_no" attrs="{'invisible':[('task_activity', 'in', ('account', 'receive_goods',
+                                'eta_status', 'trans_update', 'stock_take', 'arrangement', 'goods_return', 'lead_gen',
+                                'stock_reconciliation', 'sourcing', 'admin_pricing', 'prequal', 'purchase_approval',
+                                'sup_lpo', 'analysis', 'lpo_prep', 'supplier_process', 'overseas_process',
+                                'overseas_follow', 'purchase_follow', 'supplier_reconciliation', 'credit_terms',
+                                'lpo_report', 'transport', 'receive_tools', 'clearance', 'gatepass', 'invoice_receipts'))], 'required':[('task_activity', 'in', ('goods_issuance',
+                                'purchase_req', 'tools_issuance'))]}"/>
+                            <field name="lpo_number" attrs="{'invisible':[('task_activity', 'in', ('account',
+                                'goods_issuance', 'purchase_req', 'tools_issuance', 'eta_status',
+                                'trans_update', 'stock_take', 'arrangement', 'stock_reconciliation', 'admin_pricing',
+                                'purchase_approval', 'analysis', 'supplier_process', 'lead_gen',
+                                'supplier_reconciliation', 'credit_terms', 'lpo_report', 'transport', 'receive_tools', 'clearance', 'gatepass', 'invoice_receipts'))], 'required':[('task_activity', 'in', ('receive_goods', 'goods_return',
+                                'sup_lpo', 'overseas_process', 'overseas_follow', 'purchase_follow', 'sourcing', 'prequal', 'lpo_prep'))]}"/>
+                            <field name="user"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" required="True"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="status" required="True"/>
+                            <field name="start_time"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="end_time" attrs="{'required': [('status', '=', 'complete')],
+                            'invisible':[('status', '=', 'ongoing')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="status_comment"/>
+                    </group>
+                    <notebook>
+                        <page string="Time Data">
+                            <group>
+                                <field name="duration"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_stores_timesheet"
+              name="Procurement/Stores Timesheet"
+              parent="timesheet_child_root"
+              action="action_stores_timesheet"
+              sequence="19"/>
+</odoo>

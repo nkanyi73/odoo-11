@@ -1,19 +1,25 @@
 # -*- coding: utf-8 -*-
 {
-    'name' : 'Timesheet Management',
-    'version' : '1.1',
+    'name': 'Timesheet Management',
+    'version': '1.1',
     'summary': 'Manages organization timesheets',
     'sequence': -100,
     'description': """
     """,
     'category': 'Human Resources',
     'website': 'https://www.odoo.com/page/timesheets',
-    'depends': [],
+    'depends': ['helpdesk_lite', 'crm', 'sale_crm', 'purchase', 'hr_expense'],
     'data': [
         'security/ir.model.access.csv',
-        'views/timesheet.xml',
         'data/data.xml',
-        'report/engineer_timesheet_report'
+        'views/timesheet.xml',
+        'views/sales_timesheet.xml',
+        'views/tech_timesheet.xml',
+        'views/hr_timesheet.xml',
+        'views/marketing_timesheet.xml',
+        'views/stores_timesheet.xml',
+        'views/accounts_timesheet.xml',
+        'views/csc_timesheet.xml',
     ],
     'demo': [],
     'qweb': [],

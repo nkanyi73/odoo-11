@@ -25,7 +25,8 @@ class Timesheet(models.Model):
     job_time = fields.Char(string="Time taken to complete task", compute="_get_job_time")
     # project_id = fields.Many2one(comodel_name='project.project', string='Associated Project')
     engineer_id = fields.Many2one(comodel_name='hr.employee', string='Employee')
-    status = fields.Many2one(string='Status', comodel_name='helpdesk_lite.stage', related='ticket_no.stage_id')
+    customer_name = fields.Char(string='Customer Name')
+    status = fields.Many2one(string='Status', comodel_name='helpdesk_lite.stage', related='ticket_no.stage_id', store=True)
     status_comment = fields.Text(string='Status Comment', translate=True)
     category = fields.Selection([
         ('inhouse', 'In-house'),

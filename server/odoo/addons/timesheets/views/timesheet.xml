@@ -80,6 +80,7 @@
                             <field name="create_date"/>
                             <field name="other_employees"/>
                             <field name="coordinator"/>
+                            <field name="customer_name" required="True"/>
                         </group>
                     </group>
                     <group>
